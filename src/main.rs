@@ -74,10 +74,10 @@ fn main() {
 
     let audio_stream = audioviz::AudioStream::init(
         audioviz::Config {
-            density_reduction: 0,
-            smoothing_size: 12,
-            smoothing_amount: 4,
-            frequency_scale_range: [0, 6900],
+            density_reduction: 1,
+            smoothing_size: 5,
+            smoothing_amount: 5,
+            frequency_scale_range: [0, 20000],
             frequency_scale_amount: 0,
             max_frequency: 20_000,
             buffering: 3,
