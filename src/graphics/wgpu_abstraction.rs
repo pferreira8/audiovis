@@ -189,7 +189,7 @@ impl State {
 
         let (vertices, indices) = crate::graphics::mesh::from_buffer(
             buffer,
-            Visualisation::Circle,
+            Visualisation::Bars,
             1.0,
             1.0,
             1.0,
