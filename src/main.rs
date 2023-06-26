@@ -1,7 +1,7 @@
 use winit::{
     event::*,
     event_loop::{ControlFlow, EventLoop},
-    window::WindowBuilder,
+    window::WindowBuilder, dpi::{LogicalSize, PhysicalPosition},
 };
 use audioviz;
 
@@ -17,7 +17,12 @@ use clap::{Arg, App, AppSettings};
 fn main() {
     let matches = App::new("audiovis")
     .version("0.1.0")
-    .author("Luca Biendl <b.lucab1211@gmail.com>")
+    .author("
+    fork by: pf
+    
+    author: Luca Biendl <b.lucab1211@gmail.com>
+
+    ")
     .about("tool to visualize audio")
     .setting(AppSettings::ColorAlways)
     .setting(AppSettings::ColoredHelp)
@@ -70,14 +75,14 @@ fn main() {
     let audio_stream = audioviz::AudioStream::init(
         audioviz::Config {
             density_reduction: 0,
-            smoothing_size: 5,
-            smoothing_amount: 10,
-            frequency_scale_range: [0, 1000],
+            smoothing_size: 12,
+            smoothing_amount: 4,
+            frequency_scale_range: [0, 6900],
             frequency_scale_amount: 0,
             max_frequency: 20_000,
-            buffering: 5,
-            resolution: 3000,
-            volume: 0.5,
+            buffering: 3,
+            resolution: 9000,
+            volume: 8.0,
             ..Default::default()
         }
     );
@@ -87,7 +92,24 @@ fn main() {
     //init_auto_volume(event_sender.clone());
 
     let event_loop = EventLoop::new();
-    let window = WindowBuilder::new().build(&event_loop).unwrap();
+
+    let window_width = 1200;
+    let window_height = 250;
+    let screen = event_loop.primary_monitor().unwrap();
+    let screen_size = screen.size();
+    let screen_position = screen.position();
+
+    let window_x = screen_position.x + (screen_size.width as i32 - window_width) / 2;
+    let window_y = (screen_position.y as i32 + screen_size.height as i32 - window_height) - 50;
+
+    let window = WindowBuilder::new()
+        .with_title("AUDIOVIS")
+        .with_inner_size(LogicalSize::new(window_width, window_height))
+        .with_position(PhysicalPosition::new(window_x, window_y))
+        .with_decorations(false)
+        .with_transparent(true)
+        .with_always_on_top(true)
+        .build(&event_loop).unwrap();
     let mut state = pollster::block_on(State::new(&window, event_sender));
 
     event_loop.run(move |event, _, control_flow| {
